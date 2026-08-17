@@ -1,0 +1,69 @@
+<!-- V7 沉浸式酒桌：酒瓶 → 倒酒 → 举杯 → 饮用 → 随时换酒 -->
+<view class="v7-page {{drunkEffect}}" style="{{themeStyle}}">
+  <view class="top-bar">
+    <view class="drunk-wrap">
+      <text class="top-label">醉酒度</text>
+      <view class="meter"><view class="meter-fill" style="width:{{drunkValue}}%;background:{{drunkLevelColor}};"></view></view>
+      <text class="status" style="color:{{drunkLevelColor}};">{{drunkStatus}}</text>
+    </view>
+    <view class="finish" bindtap="finishDrinking">结束</view>
+  </view>
+
+  <view class="quote {{quoteVisible ? 'show' : ''}}">{{currentQuote}}</view>
+
+  <view class="table-stage">
+    <view class="ambient" style="background:radial-gradient(circle,{{drink.color}}44 0%,transparent 66%);"></view>
+
+    <!-- 酒瓶：V7 第一阶段采用纯 CSS 结构，后续可无缝替换高清素材 -->
+    <view class="bottle-wrap {{isPouring ? 'pouring' : ''}}" style="--pour-tilt:{{profile.pour.tilt}}deg;">
+      <view class="bottle bottle-{{profile.bottle.kind}}">
+        <view class="bottle-cap" style="background:{{profile.bottle.cap}};"></view>
+        <view class="bottle-neck"></view>
+        <view class="bottle-body" style="background:{{profile.bottle.body}};">
+          <view class="bottle-highlight"></view>
+          <view class="bottle-label">{{profile.bottle.label}}</view>
+        </view>
+      </view>
+      <view class="stream {{streamVisible ? 'show' : ''}}" style="width:{{profile.pour.streamWidth}}rpx;background:{{drink.liquidColor}};"></view>
+    </view>
+
+    <view class="glass-motion {{isDrinking ? 'drinking' : ''}}" style="--lift:{{profile.motion.lift}}rpx;--drink-rotate:{{profile.motion.rotate}}deg;--drink-duration:{{profile.motion.duration}}ms;">
+      <canvas type="2d" id="v7GlassCanvas" class="glass-canvas"></canvas>
+    </view>
+
+    <view class="drink-title">
+      <text class="drink-name">{{drink.emoji}} {{drink.name}}</text>
+      <text class="serving">{{profile.serving}}</text>
+    </view>
+
+    <view class="table-shadow"></view>
+  </view>
+
+  <view class="action-row">
+    <view class="counter">
+      <text class="counter-num">{{glasses}}</text><text class="counter-unit">杯</text>
+      <text class="counter-sub">{{sips}} 口</text>
+    </view>
+
+    <button wx:if="{{phase === 'empty' && !profile.requiresBartending}}" class="primary pour-btn" bindtap="startPour">倒一杯</button>
+    <button wx:elif="{{phase === 'pouring'}}" class="primary disabled" disabled>正在倒酒…</button>
+    <button wx:elif="{{profile.requiresBartending}}" class="primary bartend-btn" bindtap="goBartend">去调这杯</button>
+    <button wx:else class="primary drink-btn {{isDrinking ? 'active' : ''}}" bindtap="takeSip" disabled="{{drunkValue >= 100}}">{{isDrinking ? '咕咚…' : '喝一口'}}</button>
+
+    <view class="counter right"><text class="counter-num">{{drink.abv}}</text><text class="counter-unit">%vol</text></view>
+  </view>
+
+  <!-- 酒桌内随时换酒 -->
+  <view class="wine-drawer">
+    <view class="drawer-title"><text>今晚酒单</text><text class="drawer-tip">随时换酒</text></view>
+    <scroll-view class="wine-scroll" scroll-x enhanced show-scrollbar="false">
+      <view class="wine-list">
+        <view wx:for="{{drinks}}" wx:key="id" data-index="{{index}}" bindtap="switchDrink" class="wine-card {{activeIndex === index ? 'active' : ''}}">
+          <text class="wine-emoji">{{item.emoji}}</text>
+          <text class="wine-name">{{item.name}}</text>
+          <text class="wine-abv">{{item.abv}}%</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
