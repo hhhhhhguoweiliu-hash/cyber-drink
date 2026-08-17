@@ -1,0 +1,14 @@
+<view class="page">
+  <view class="head"><text class="eyebrow">3D BARTENDER</text><text class="title">{{stepName}}</text><text class="hint">{{hint}}</text></view>
+  <view class="scene"><canvas type="webgl" id="bar3d" class="webgl"></canvas><view wx:if="{{!ready}}" class="loading">正在准备 3D 吧台…</view></view>
+  <view class="steps"><view wx:for="{{['量酒','加冰','辅料','摇壶','滤酒','装饰']}}" wx:key="*this" class="dot {{step===index?'on':''}} {{step>index?'done':''}}"><text>{{index+1}}</text><text class="lab">{{item}}</text></view></view>
+  <view class="controls">
+    <view wx:if="{{step===0}}" class="choices"><view wx:for="{{bases}}" wx:key="id" data-i="{{index}}" bindtap="selectBase" class="choice {{base===index?'on':''}}"><text>{{item.emoji}}</text><text>{{item.name}}</text></view></view>
+    <button wx:elif="{{step===1}}" bindtap="addIce" disabled="{{busy}}" class="action">{{busy?'冰块落下中…':'加入冰块'}}</button>
+    <view wx:elif="{{step===2}}" class="choices"><view wx:for="{{mixers}}" wx:key="id" data-i="{{index}}" bindtap="selectMixer" class="choice {{mixer===index?'on':''}}"><text>{{item.emoji}}</text><text>{{item.name}}</text></view></view>
+    <button wx:elif="{{step===3}}" bindtap="startShake" disabled="{{busy}}" class="action">{{busy?'正在摇壶…':'摇手机 / 点击开始'}} · {{shakeCount}}/5</button>
+    <button wx:elif="{{step===4}}" bindtap="strain" disabled="{{busy}}" class="action">{{busy?'正在滤冰出酒…':'过滤倒入杯中'}}</button>
+    <button wx:elif="{{step===5 && !finished}}" bindtap="garnish" disabled="{{busy}}" class="action">{{busy?'装饰中…':'最后装饰'}}</button>
+    <button wx:else bindtap="goDrink" class="action finish">端回 3D 酒桌</button>
+  </view>
+</view>
