@@ -1,0 +1,82 @@
+<!-- pages/result/result.wxml - 结算页面 -->
+<view class="result-page fade-in" style="{{themeStyle}}">
+
+  <!-- 醉酒结果 -->
+  <view class="result-header">
+    <text class="result-emoji">{{resultEmoji}}</text>
+    <text class="result-title">{{resultTitle}}</text>
+    <text class="result-subtitle">{{resultSubtitle}}</text>
+  </view>
+
+  <!-- 战绩数据 -->
+  <view class="stats-grid">
+    <view class="stat-card">
+      <text class="stat-value">{{drink.emoji}} {{drink.name}}</text>
+      <text class="stat-label">今晚的酒</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{sips}}</text>
+      <text class="stat-label">喝了多少口</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{glasses}}</text>
+      <text class="stat-label">喝了几杯</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{drunkValue}}%</text>
+      <text class="stat-label">醉酒度</text>
+    </view>
+  </view>
+
+  <!-- 醉酒等级评价 -->
+  <view class="verdict-card">
+    <text class="verdict-text">{{verdictText}}</text>
+  </view>
+
+  <!-- 新成就 -->
+  <view class="achievement-section" wx:if="{{newAchievements.length > 0}}">
+    <text class="section-title">解锁新成就</text>
+    <view class="ach-list">
+      <view class="ach-item" wx:for="{{newAchievements}}" wx:key="id">
+        <text class="ach-emoji">🏆</text>
+        <view class="ach-info">
+          <text class="ach-name">{{item.name}}</text>
+          <text class="ach-desc">{{item.desc}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 累计统计 -->
+  <view class="total-stats" wx:if="{{totalStats.totalSips > 0}}">
+    <text class="section-title">累计数据</text>
+    <view class="total-row">
+      <text class="total-label">总喝酒杯数</text>
+      <text class="total-num">{{totalStats.totalDrinks}}</text>
+    </view>
+    <view class="total-row">
+      <text class="total-label">总喝酒口数</text>
+      <text class="total-num">{{totalStats.totalSips}}</text>
+    </view>
+    <view class="total-row">
+      <text class="total-label">历史最高醉意</text>
+      <text class="total-num">{{totalStats.maxDrunkLevel}}%</text>
+    </view>
+    <view class="total-row">
+      <text class="total-label">已解锁成就</text>
+      <text class="total-num">{{totalStats.unlockedAchievements.length}}个</text>
+    </view>
+  </view>
+
+  <!-- 按钮区 -->
+  <view class="result-actions">
+    <button class="btn-share" open-type="share">
+      <text>分享给酒友</text>
+    </button>
+    <view class="btn-row">
+      <button class="btn-again" bindtap="drinkAgain">再来一轮</button>
+      <button class="btn-home" bindtap="goHome">回首页</button>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,71 @@
+<!-- pages/drink/drink.wxml - 喝酒页面 -->
+<view class="drink-page {{drunkEffect}}" style="{{themeStyle}}">
+
+  <!-- 顶部：醉酒度 + 口数 + 结束本轮 -->
+  <view class="top-bar">
+    <view class="drunk-meter-wrap">
+      <text class="meter-label">醉酒度</text>
+      <view class="drunk-meter">
+        <view class="drunk-meter-fill" style="width: {{drunkValue}}%; background: {{drunkLevelColor}};"></view>
+      </view>
+      <text class="meter-status" style="color: {{drunkLevelColor}};">{{drunkStatus}}</text>
+    </view>
+    <view class="top-right">
+      <view class="sip-counter">
+        <text class="sip-num">{{sips}}</text>
+        <text class="sip-unit">口</text>
+      </view>
+      <view class="btn-finish-mini" bindtap="finishDrinking">结束</view>
+    </view>
+  </view>
+
+  <!-- 骚话气泡 -->
+  <view class="quote-bubble {{quoteVisible ? 'show' : ''}}">
+    <text class="quote-text">{{currentQuote}}</text>
+  </view>
+
+  <!-- 酒杯区域 (Canvas) + 氛围光晕 -->
+  <view class="glass-area">
+    <view class="glass-glow" style="background: radial-gradient(circle, {{drink.color}}33 0%, transparent 70%);"></view>
+    <canvas
+      type="2d"
+      id="glassCanvas"
+      class="glass-canvas"
+    ></canvas>
+    <view class="drink-name-tag">
+      <text>{{drink.emoji}} {{drink.name}}</text>
+    </view>
+  </view>
+
+  <!-- 底部按钮区 -->
+  <view class="action-bar">
+    <!-- 左侧：杯数 -->
+    <view class="glass-count" wx:if="{{glasses > 0}}">
+      <text class="glass-count-num">{{glasses}}</text>
+      <text class="glass-count-label">杯</text>
+    </view>
+    <view class="glass-count-placeholder" wx:else></view>
+
+    <!-- 中间：干一口大按钮（支持长按） -->
+    <button
+      class="btn-drink {{isDrinking ? 'drinking' : ''}} {{isChugging ? 'chugging' : ''}} {{drunkValue >= 100 ? 'disabled' : ''}}"
+      bindtap="takeSip"
+      bindlongpress="chugGlass"
+      bindtouchstart="onDrinkTouchStart"
+      bindtouchend="onDrinkTouchEnd"
+      disabled="{{drunkValue >= 100}}"
+    >
+      <view class="btn-inner">
+        <text class="btn-text">{{drunkValue >= 100 ? '已断片' : (isChugging ? '咕咚咕咚...' : (isDrinking ? '咕咚...' : '干一口'))}}</text>
+        <text class="btn-hint" wx:if="{{drunkValue < 100 && !isChugging}}">长按一口气</text>
+      </view>
+    </button>
+
+    <!-- 右侧：占位保持居中 -->
+    <view class="glass-count-placeholder"></view>
+  </view>
+
+  <!-- 豪饮特效层 -->
+  <view class="chug-flash {{chugFlash ? 'show' : ''}}"></view>
+
+</view>

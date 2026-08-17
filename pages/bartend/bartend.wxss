@@ -1,0 +1,525 @@
+/* pages/bartend/bartend.wxss - 调酒台样式 */
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0f0f1e 0%, #1a1525 50%, #0f0f1e 100%);
+  padding-bottom: 60rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ==================== 步骤进度条 ==================== */
+.step-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx 20rpx 20rpx;
+  width: 100%;
+  max-width: 680rpx;
+}
+
+.step-dot {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.step-dot.active {
+  background: rgba(244, 130, 180, 0.15);
+  border-color: #D4537E;
+  box-shadow: 0 0 16rpx rgba(244, 130, 180, 0.3);
+  transform: scale(1.1);
+}
+
+.step-dot.done {
+  background: rgba(93, 202, 165, 0.15);
+  border-color: #5DCAA5;
+}
+
+.step-emoji {
+  font-size: 28rpx;
+}
+
+.step-line {
+  flex: 1;
+  height: 4rpx;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 8rpx;
+  max-width: 60rpx;
+  border-radius: 2rpx;
+}
+
+.step-line.done {
+  background: #5DCAA5;
+}
+
+/* ==================== 步骤说明 ==================== */
+.step-info {
+  text-align: center;
+  margin: 20rpx 0 30rpx;
+  padding: 0 40rpx;
+}
+
+.step-name {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #e0e0e0;
+}
+
+.step-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #888;
+  margin-top: 8rpx;
+}
+
+.step-hint {
+  display: block;
+  font-size: 24rpx;
+  color: #D4537E;
+  margin-top: 12rpx;
+}
+
+/* ==================== 调酒壶区域 ==================== */
+.shaker-area {
+  position: relative;
+  width: 400rpx;
+  height: 500rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20rpx 0;
+}
+
+.shaker {
+  position: relative;
+  width: 200rpx;
+  height: 340rpx;
+  transition: transform 0.5s ease;
+}
+
+/* 壶盖 */
+.shaker-cap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140rpx;
+  height: 30rpx;
+  background: linear-gradient(135deg, #555, #333);
+  border-radius: 8rpx 8rpx 4rpx 4rpx;
+  z-index: 3;
+}
+
+/* 壶身 */
+.shaker-body {
+  position: absolute;
+  top: 24rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180rpx;
+  height: 280rpx;
+  background: linear-gradient(135deg, rgba(80, 80, 90, 0.6), rgba(50, 50, 60, 0.8));
+  border-radius: 12rpx 12rpx 20rpx 20rpx;
+  border: 3rpx solid rgba(120, 120, 130, 0.4);
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* 壶嘴 */
+.shaker-spout {
+  position: absolute;
+  top: 20rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 20rpx;
+  background: rgba(80, 80, 90, 0.6);
+  border-radius: 0 0 8rpx 8rpx;
+  z-index: 1;
+}
+
+/* 液体填充 */
+.liquid-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0 0 17rpx 17rpx;
+  transition: height 0.5s ease, background 0.3s ease;
+  opacity: 0.85;
+}
+
+/* 冰块 */
+.ice-cubes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.ice-cube {
+  position: absolute;
+  width: 36rpx;
+  height: 36rpx;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  animation: iceFloat 3s ease-in-out infinite;
+}
+
+.ice-cube:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.ice-cube:nth-child(3) {
+  animation-delay: 2s;
+}
+
+@keyframes iceFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8rpx) rotate(15deg); }
+}
+
+/* 气泡 */
+.bubbles {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  bottom: 10%;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: bubbleRise 2s ease-in infinite;
+}
+
+@keyframes bubbleRise {
+  0% { bottom: 5%; opacity: 0; }
+  20% { opacity: 0.6; }
+  100% { bottom: 90%; opacity: 0; }
+}
+
+/* 摇晃动画 */
+.shaking {
+  animation: containerShake 0.1s ease-in-out infinite;
+}
+
+@keyframes containerShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4rpx); }
+  75% { transform: translateX(4rpx); }
+}
+
+.shake-anim {
+  animation: shakerShake 0.3s ease-in-out infinite;
+}
+
+@keyframes shakerShake {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+
+/* 倾倒状态 */
+.shaker.tipped {
+  transform: rotate(-35deg) translateY(-40rpx);
+}
+
+/* 成品杯 */
+.finished-glass {
+  position: absolute;
+  bottom: 0;
+  right: 20rpx;
+  width: 120rpx;
+  height: 200rpx;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.finished-glass.show {
+  opacity: 1;
+}
+
+.glass-bowl {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2rpx solid rgba(255, 255, 255, 0.15);
+  border-radius: 0 0 50rpx 50rpx;
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+  overflow: hidden;
+}
+
+.glass-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70%;
+  opacity: 0.8;
+}
+
+.glass-stem {
+  position: absolute;
+  top: 80rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.glass-base {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 8rpx;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+
+.garnish {
+  position: absolute;
+  top: -10rpx;
+  right: 0;
+}
+
+.garnish-emoji {
+  font-size: 32rpx;
+}
+
+/* 倾倒液流 */
+.pour-stream {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  width: 6rpx;
+  height: 120rpx;
+  background: linear-gradient(180deg, rgba(244, 130, 180, 0.6), rgba(244, 130, 180, 0.2));
+  border-radius: 3rpx;
+  animation: pourFlow 0.8s ease-out;
+}
+
+@keyframes pourFlow {
+  0% { height: 0; opacity: 0; }
+  30% { height: 120rpx; opacity: 0.8; }
+  100% { height: 120rpx; opacity: 0; }
+}
+
+/* ==================== 步骤面板 ==================== */
+.step-panel {
+  width: 100%;
+  max-width: 680rpx;
+  padding: 0 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.option-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  width: 100%;
+  margin-bottom: 30rpx;
+}
+
+.option-card {
+  flex: 1;
+  min-width: 140rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 16rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.2s ease;
+}
+
+.option-card.selected {
+  background: rgba(244, 130, 180, 0.1);
+  border-color: #D4537E;
+  box-shadow: 0 0 16rpx rgba(244, 130, 180, 0.15);
+}
+
+.option-card:active {
+  transform: scale(0.96);
+}
+
+.option-emoji {
+  font-size: 44rpx;
+}
+
+.option-name {
+  font-size: 24rpx;
+  color: #aaa;
+  margin-top: 8rpx;
+}
+
+/* 交互区域 */
+.ice-drop-zone,
+.shake-zone,
+.pour-zone,
+.garnish-zone {
+  width: 100%;
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 24rpx;
+  border: 2rpx dashed rgba(255, 255, 255, 0.1);
+  margin-bottom: 30rpx;
+}
+
+.ice-drop-zone:active,
+.shake-zone:active,
+.pour-zone:active,
+.garnish-zone:active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.zone-emoji {
+  font-size: 56rpx;
+}
+
+.shake-icon {
+  animation: shakeIcon 0.3s ease-in-out infinite;
+}
+
+@keyframes shakeIcon {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+.zone-text {
+  font-size: 26rpx;
+  color: #888;
+  margin-top: 16rpx;
+}
+
+.zone-hint {
+  font-size: 22rpx;
+  color: #555;
+  margin-top: 8rpx;
+}
+
+/* 步骤按钮 */
+.step-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #D4537E, #b04068);
+  border: none;
+  border-radius: 44rpx;
+}
+
+.step-btn::after {
+  border: none;
+}
+
+.step-btn[disabled] {
+  background: rgba(255, 255, 255, 0.1);
+  color: #555;
+}
+
+/* ==================== 完成弹窗 ==================== */
+.finish-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.finish-card {
+  width: 560rpx;
+  padding: 48rpx 40rpx;
+  background: linear-gradient(180deg, #1a1525, #0f0f1e);
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(244, 130, 180, 0.2);
+  text-align: center;
+  animation: cardPop 0.4s ease-out;
+}
+
+@keyframes cardPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.finish-emoji {
+  font-size: 80rpx;
+}
+
+.finish-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #e0e0e0;
+  margin-top: 16rpx;
+}
+
+.finish-drink-name {
+  display: block;
+  font-size: 32rpx;
+  color: #D4537E;
+  margin-top: 16rpx;
+}
+
+.finish-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #888;
+  margin-top: 8rpx;
+}
+
+.finish-btn {
+  margin-top: 32rpx;
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #D4537E, #b04068);
+  border: none;
+  border-radius: 44rpx;
+}
+
+.finish-btn::after {
+  border: none;
+}

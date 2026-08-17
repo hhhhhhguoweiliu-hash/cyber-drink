@@ -1,0 +1,186 @@
+<!-- pages/face-drink/face-drink.wxml - 面基喝酒页面 -->
+<view class="container {{screenShake ? 'screen-shake' : ''}} {{blackoutOverlay ? 'blackout-anim' : ''}}">
+
+  <!-- 标题 -->
+  <view class="header">
+    <text class="title">🤝 面基干杯</text>
+    <text class="subtitle">{{round}}回合 · {{winner ? winner + ' 获胜！' : '谁先断片谁输'}}</text>
+  </view>
+
+  <!-- 选酒区 -->
+  <view class="drink-select" wx:if="{{!started}}">
+    <text class="select-label">选一款酒开战</text>
+    <scroll-view scroll-x class="drink-scroll">
+      <view
+        class="drink-chip {{selectedDrinkId === item.id ? 'active' : ''}}"
+        wx:for="{{drinks}}" wx:key="id"
+        bindtap="pickDrink"
+        data-id="{{item.id}}"
+      >
+        <text class="chip-emoji">{{item.emoji}}</text>
+        <text class="chip-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 未开始：上传照片 -->
+  <view class="upload-zone" wx:if="{{!started}}">
+    <!-- 隐私提示 -->
+    <view class="privacy-notice" wx:if="{{showPrivacyTip}}">
+      <view class="privacy-icon">🔒</view>
+      <view class="privacy-content">
+        <text class="privacy-title">隐私保护说明</text>
+        <text class="privacy-text">照片仅在本局游戏中本地显示，不会上传服务器，不会保存，退出页面即自动销毁。放心使用！</text>
+      </view>
+      <view class="privacy-close" bindtap="dismissPrivacyTip">✕</view>
+    </view>
+
+    <view class="upload-row">
+      <view class="player-upload">
+        <view class="avatar-box" bindtap="uploadPhoto" data-player="me">
+          <image wx:if="{{meAvatar}}" src="{{meAvatar}}" class="avatar-img" mode="aspectFill"></image>
+          <view wx:else class="avatar-placeholder">
+            <text class="placeholder-emoji">🤳</text>
+            <text class="placeholder-text">你的照片</text>
+          </view>
+        </view>
+        <text class="player-name">我</text>
+      </view>
+
+      <view class="vs-divider">
+        <text class="vs-text">VS</text>
+      </view>
+
+      <view class="player-upload">
+        <view class="avatar-box" bindtap="uploadPhoto" data-player="friend">
+          <image wx:if="{{friendAvatar}}" src="{{friendAvatar}}" class="avatar-img" mode="aspectFill"></image>
+          <view wx:else class="avatar-placeholder">
+            <text class="placeholder-emoji">👤</text>
+            <text class="placeholder-text">朋友照片</text>
+          </view>
+        </view>
+        <text class="player-name">酒友</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 隐私小字 -->
+  <view class="privacy-mini" wx:if="{{!started}}">
+    <text>🔒 照片不上传 · 不保存 · 退出即销毁</text>
+  </view>
+
+  <!-- 开始按钮 -->
+  <view class="start-zone" wx:if="{{!started}}">
+    <button class="start-btn" bindtap="startGame" disabled="{{!meAvatar || !friendAvatar || !selectedDrinkId}}">
+      {{(!meAvatar || !friendAvatar) ? '上传照片开战' : (!selectedDrinkId ? '选一款酒' : '开始干杯！')}}
+    </button>
+  </view>
+
+  <!-- 游戏中：喝酒台 -->
+  <view class="game-area" wx:if="{{started}}">
+
+    <!-- 我方 -->
+    <view class="player-side left-side {{meDrunk >= 92 ? 'passed-out' : ''}}">
+      <view class="player-avatar-wrap">
+        <canvas type="2d" id="meFaceCanvas" class="game-avatar {{meAnimClass}}"></canvas>
+        <!-- 醉酒红脸叠加 -->
+        <view class="drunk-overlay" style="opacity: {{meDrunk / 150}};"></view>
+        <!-- 窘态 emoji 弹窗 -->
+        <view class="drunk-emoji-pop" wx:if="{{meEmoji}}">
+          <text class="emoji-pop-text">{{meEmoji}}</text>
+        </view>
+        <!-- 叫爸爸气泡 -->
+        <view class="daddy-bubble" wx:if="{{meDaddy}}">
+          <text class="daddy-text">{{meDaddy}}</text>
+        </view>
+      </view>
+      <text class="player-label">我</text>
+      <view class="drunk-meter">
+        <view class="meter-bar" style="width: {{meDrunk}}%; background: {{meLevelColor}};"></view>
+      </view>
+      <text class="drunk-status">{{meStatus}}</text>
+
+      <!-- 窘态描述 -->
+      <text class="reaction-text" wx:if="{{meReaction}}">😳 {{meReaction}}</text>
+
+      <!-- 我的酒杯 -->
+      <view class="my-glass">
+        <view class="glass-cup">
+          <view class="glass-liquid" style="height: {{meGlassLevel}}%;"></view>
+        </view>
+      </view>
+
+      <text class="player-quote" wx:if="{{meQuote}}">💬 {{meQuote}}</text>
+    </view>
+
+    <!-- 中间干杯区 -->
+    <view class="center-area">
+      <view class="cheers-zone" bindtap="cheers">
+        <text class="cheers-emoji {{cheering ? 'cheer-bounce' : ''}}">🥂</text>
+        <text class="cheers-text">{{cheering ? '干杯！' : '点击干杯'}}</text>
+      </view>
+      <text class="round-text">第 {{round}} 回合</text>
+    </view>
+
+    <!-- 朋友方 -->
+    <view class="player-side right-side {{friendDrunk >= 92 ? 'passed-out' : ''}}">
+      <view class="player-avatar-wrap">
+        <canvas type="2d" id="friendFaceCanvas" class="game-avatar {{friendAnimClass}}"></canvas>
+        <!-- 醉酒红脸叠加 -->
+        <view class="drunk-overlay" style="opacity: {{friendDrunk / 150}};"></view>
+        <!-- 窘态 emoji 弹窗 -->
+        <view class="drunk-emoji-pop" wx:if="{{friendEmoji}}">
+          <text class="emoji-pop-text">{{friendEmoji}}</text>
+        </view>
+        <!-- 叫爸爸气泡 -->
+        <view class="daddy-bubble" wx:if="{{friendDaddy}}">
+          <text class="daddy-text">{{friendDaddy}}</text>
+        </view>
+      </view>
+      <text class="player-label">酒友</text>
+      <view class="drunk-meter">
+        <view class="meter-bar" style="width: {{friendDrunk}}%; background: {{friendLevelColor}};"></view>
+      </view>
+      <text class="drunk-status">{{friendStatus}}</text>
+
+      <!-- 窘态描述 -->
+      <text class="reaction-text" wx:if="{{friendReaction}}">😳 {{friendReaction}}</text>
+
+      <!-- 朋友酒杯 -->
+      <view class="friend-glass">
+        <view class="glass-cup">
+          <view class="glass-liquid" style="height: {{friendGlassLevel}}%;"></view>
+        </view>
+      </view>
+
+      <text class="player-quote" wx:if="{{friendQuote}}">💬 {{friendQuote}}</text>
+    </view>
+  </view>
+
+  <!-- 结束弹窗 -->
+  <view class="result-overlay" wx:if="{{gameOver}}">
+    <view class="result-card">
+      <text class="result-emoji">{{resultEmoji}}</text>
+      <text class="result-title">{{winner}}获胜！</text>
+      <text class="result-desc">坚持了{{round}}回合</text>
+      <view class="result-stats">
+        <view class="rs-item">
+          <text class="rs-label">我</text>
+          <text class="rs-value">{{meStatus}}</text>
+        </view>
+        <view class="rs-item">
+          <text class="rs-label">酒友</text>
+          <text class="rs-value">{{friendStatus}}</text>
+        </view>
+      </view>
+      <!-- 隐私提醒 -->
+      <view class="result-privacy">
+        <text>🔒 照片已自动清除，未做任何保存</text>
+      </view>
+      <button class="result-btn" bindtap="playAgain">再来一局</button>
+      <button class="result-home" bindtap="goHome">返回首页</button>
+      <button class="result-share" open-type="share">分享战绩</button>
+    </view>
+  </view>
+
+</view>

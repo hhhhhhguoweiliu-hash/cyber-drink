@@ -1,0 +1,146 @@
+<!-- pages/bartend/bartend.wxml - 调酒交互页面 -->
+<view class="container {{shaking ? 'shaking' : ''}}">
+
+  <!-- 步骤进度条 -->
+  <view class="step-bar">
+    <block wx:for="{{steps}}" wx:key="id">
+      <view class="step-dot {{currentStep > index ? 'done' : ''}} {{currentStep === index ? 'active' : ''}}">
+        <text class="step-emoji">{{item.emoji}}</text>
+      </view>
+      <view class="step-line {{currentStep > index ? 'done' : ''}}" wx:if="{{index < steps.length - 1}}"></view>
+    </block>
+  </view>
+
+  <!-- 当前步骤说明 -->
+  <view class="step-info">
+    <text class="step-name">{{steps[currentStep].name}}</text>
+    <text class="step-desc">{{steps[currentStep].desc}}</text>
+    <text class="step-hint">{{steps[currentStep].hint}}</text>
+  </view>
+
+  <!-- 调酒壶区域 -->
+  <view class="shaker-area">
+    <view class="shaker {{shaking ? 'shake-anim' : ''}} {{currentStep >= 4 ? 'tipped' : ''}}">
+      <!-- 壶盖 -->
+      <view class="shaker-cap"></view>
+      <!-- 壶身 -->
+      <view class="shaker-body">
+        <!-- 液体 -->
+        <view class="liquid-fill" style="height: {{liquidLevel}}%; background: {{liquidColor}};"></view>
+        <!-- 冰块 -->
+        <view class="ice-cubes" wx:if="{{hasIce}}">
+          <view class="ice-cube" style="top: 30%; left: 20%;"></view>
+          <view class="ice-cube" style="top: 45%; left: 55%;"></view>
+          <view class="ice-cube" style="top: 25%; left: 70%;"></view>
+        </view>
+        <!-- 气泡 -->
+        <view class="bubbles" wx:if="{{liquidLevel > 0}}">
+          <view class="bubble" style="left: 30%; animation-delay: 0s;"></view>
+          <view class="bubble" style="left: 50%; animation-delay: 0.3s;"></view>
+          <view class="bubble" style="left: 70%; animation-delay: 0.6s;"></view>
+        </view>
+      </view>
+      <!-- 壶嘴 -->
+      <view class="shaker-spout"></view>
+    </view>
+
+    <!-- 成品杯（出酒后显示） -->
+    <view class="finished-glass {{currentStep >= 5 ? 'show' : ''}}">
+      <view class="glass-bowl">
+        <view class="glass-liquid" style="background: {{liquidColor}};"></view>
+      </view>
+      <view class="glass-stem"></view>
+      <view class="glass-base"></view>
+      <!-- 装饰 -->
+      <view class="garnish" wx:if="{{currentStep >= 6}}">
+        <text class="garnish-emoji">🍒</text>
+      </view>
+    </view>
+
+    <!-- 倾倒动画 -->
+    <view class="pour-stream" wx:if="{{pouring}}"></view>
+  </view>
+
+  <!-- 步骤 0: 选基酒 -->
+  <view class="step-panel" wx:if="{{currentStep === 0}}">
+    <view class="option-grid">
+      <view
+        class="option-card {{selectedBase === index ? 'selected' : ''}}"
+        wx:for="{{baseLiquors}}"
+        wx:key="id"
+        bindtap="selectBase"
+        data-index="{{index}}"
+      >
+        <text class="option-emoji">{{item.emoji}}</text>
+        <text class="option-name">{{item.name}}</text>
+      </view>
+    </view>
+    <button class="step-btn" bindtap="confirmStep" disabled="{{selectedBase < 0}}">确认基酒</button>
+  </view>
+
+  <!-- 步骤 1: 加冰 -->
+  <view class="step-panel" wx:if="{{currentStep === 1}}">
+    <view class="ice-drop-zone" bindtap="addIce">
+      <text class="zone-emoji">🧊</text>
+      <text class="zone-text">{{hasIce ? '冰块已加入' : '点击加入冰块'}}</text>
+    </view>
+    <button class="step-btn" bindtap="confirmStep" disabled="{{!hasIce}}">冰块到位</button>
+  </view>
+
+  <!-- 步骤 2: 倒辅料 -->
+  <view class="step-panel" wx:if="{{currentStep === 2}}">
+    <view class="option-grid">
+      <view
+        class="option-card {{selectedMixer === index ? 'selected' : ''}}"
+        wx:for="{{mixers}}"
+        wx:key="id"
+        bindtap="selectMixer"
+        data-index="{{index}}"
+      >
+        <text class="option-emoji">{{item.emoji}}</text>
+        <text class="option-name">{{item.name}}</text>
+      </view>
+    </view>
+    <button class="step-btn" bindtap="confirmStep" disabled="{{selectedMixer < 0}}">加入辅料</button>
+  </view>
+
+  <!-- 步骤 3: 摇匀 -->
+  <view class="step-panel" wx:if="{{currentStep === 3}}">
+    <view class="shake-zone" bindtap="onShakeTap">
+      <text class="zone-emoji {{shaking ? 'shake-icon' : ''}}">🍸</text>
+      <text class="zone-text">{{shakeCount >= 5 ? '摇匀完成！' : '摇晃手机或点击 (' + shakeCount + '/5)'}}</text>
+      <text class="zone-hint" wx:if="{{shakeCount < 5}}">用力摇晃手机，或点这里</text>
+    </view>
+    <button class="step-btn" bindtap="confirmStep" disabled="{{shakeCount < 5}}">摇匀完毕</button>
+  </view>
+
+  <!-- 步骤 4: 出酒 -->
+  <view class="step-panel" wx:if="{{currentStep === 4}}">
+    <view class="pour-zone" bindtap="pourOut">
+      <text class="zone-emoji">✨</text>
+      <text class="zone-text">{{poured ? '酒已入杯' : '点击倒酒入杯'}}</text>
+    </view>
+    <button class="step-btn" bindtap="confirmStep" disabled="{{!poured}}">出酒完成</button>
+  </view>
+
+  <!-- 步骤 5: 装饰 -->
+  <view class="step-panel" wx:if="{{currentStep === 5}}">
+    <view class="garnish-zone" bindtap="addGarnish">
+      <text class="zone-emoji">🍒</text>
+      <text class="zone-text">{{garnished ? '装饰已加上' : '点击加装饰'}}</text>
+    </view>
+    <button class="step-btn" bindtap="finishBartending" disabled="{{!garnished}}">完成调酒</button>
+  </view>
+
+  <!-- 完成弹窗 -->
+  <view class="finish-overlay" wx:if="{{finished}}">
+    <view class="finish-card">
+      <text class="finish-emoji">🎉</text>
+      <text class="finish-title">调酒完成！</text>
+      <text class="finish-drink-name">{{cocktailName}}</text>
+      <text class="finish-desc">{{cocktailDesc}}</text>
+      <button class="finish-btn" bindtap="goDrink">开始品尝 🍹</button>
+    </view>
+  </view>
+
+</view>

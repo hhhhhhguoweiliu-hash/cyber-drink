@@ -1,0 +1,24 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/drink/drink",
+    "pages/bartend/bartend",
+    "pages/face-drink/face-drink",
+    "pages/result/result"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarTitleText": "赛博喝酒",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0f0f1e"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "permission": {
+    "scope.camera": {
+      "desc": "用于拍摄照片进行面基干杯及脸部搞怪动画"
+    }
+  }
+}

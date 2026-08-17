@@ -1,0 +1,512 @@
+/* pages/index/index.wxss - 选酒页面样式（含风格选择） */
+.container {
+  min-height: 100vh;
+  padding-bottom: 180rpx;
+  background: var(--bg-gradient, linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%));
+}
+
+/* ==================== 风格选择界面 ==================== */
+.style-select {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  background: linear-gradient(180deg, #0f0f1e 0%, #1a1a2e 50%, #0f0f1e 100%);
+}
+
+.style-header {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.style-main-title {
+  display: block;
+  font-size: 64rpx;
+  font-weight: 800;
+  color: #e8d5b0;
+  letter-spacing: 8rpx;
+  text-shadow: 0 0 30rpx rgba(200, 138, 46, 0.3);
+}
+
+.style-sub {
+  display: block;
+  font-size: 28rpx;
+  color: #6b5a3e;
+  margin-top: 16rpx;
+  letter-spacing: 4rpx;
+}
+
+.style-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+  width: 100%;
+}
+
+.style-card {
+  position: relative;
+  border-radius: 32rpx;
+  overflow: hidden;
+  border: 2rpx solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+}
+
+.style-card:active {
+  transform: scale(0.97);
+}
+
+.style-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.heroic-bg {
+  background: linear-gradient(135deg, #2b1d0c 0%, #4a2f10 40%, #1a1206 100%);
+}
+
+.heroic-bg::after {
+  content: '⚔️';
+  position: absolute;
+  top: 30rpx;
+  right: 30rpx;
+  font-size: 120rpx;
+  opacity: 0.08;
+}
+
+.elegant-bg {
+  background: linear-gradient(135deg, #0f1419 0%, #1a2a36 40%, #0f1419 100%);
+}
+
+.elegant-bg::after {
+  content: '🌙';
+  position: absolute;
+  top: 30rpx;
+  right: 30rpx;
+  font-size: 120rpx;
+  opacity: 0.08;
+}
+
+.style-card-content {
+  position: relative;
+  z-index: 1;
+  padding: 48rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.style-card-emoji {
+  font-size: 72rpx;
+  margin-bottom: 16rpx;
+}
+
+.style-card-name {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #e8d5b0;
+  letter-spacing: 6rpx;
+}
+
+.heroic-card .style-card-name {
+  color: #e8c87a;
+}
+
+.elegant-card .style-card-name {
+  color: #b8d4e0;
+}
+
+.style-card-sub {
+  font-size: 24rpx;
+  color: #6b5a3e;
+  margin-top: 8rpx;
+  letter-spacing: 2rpx;
+}
+
+.elegant-card .style-card-sub {
+  color: #5a7a8a;
+}
+
+.style-card-tagline {
+  font-size: 28rpx;
+  color: #a89070;
+  margin-top: 20rpx;
+  text-align: center;
+}
+
+.elegant-card .style-card-tagline {
+  color: #8a9aaa;
+}
+
+.style-card-desc {
+  font-size: 24rpx;
+  color: #6b5a3e;
+  margin-top: 8rpx;
+}
+
+.elegant-card .style-card-desc {
+  color: #5a6878;
+}
+
+.style-footer {
+  margin-top: 60rpx;
+}
+
+.style-tip {
+  font-size: 22rpx;
+  color: #444;
+}
+
+/* ==================== 选酒界面 ==================== */
+
+/* 顶部标题区 */
+.header {
+  padding: 60rpx 40rpx 30rpx;
+  text-align: center;
+}
+
+.title-wrap {
+  margin-bottom: 24rpx;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.title-right {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.audio-toggle {
+  font-size: 32rpx;
+  padding: 4rpx 8rpx;
+  opacity: 0.7;
+}
+
+.audio-toggle.off {
+  opacity: 0.35;
+}
+
+.style-badge {
+  font-size: 22rpx;
+  color: var(--accent, #c88a2e);
+  padding: 6rpx 16rpx;
+  background: var(--accent-light, rgba(200, 138, 46, 0.15));
+  border-radius: 8rpx;
+  border: 1rpx solid var(--border-active, #c88a2e);
+}
+
+.change-style {
+  font-size: 24rpx;
+  color: var(--text-muted, #6b5a3e);
+}
+
+.title {
+  display: block;
+  font-size: 56rpx;
+  font-weight: 700;
+  color: var(--text-main, #fff);
+  letter-spacing: 4rpx;
+}
+
+.subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: var(--text-sub, #888);
+  margin-top: 12rpx;
+}
+
+/* 统计数据 */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32rpx;
+  margin-top: 32rpx;
+  padding: 20rpx 40rpx;
+  background: var(--bg-card, rgba(255, 255, 255, 0.06));
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--accent, #EF9F27);
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: var(--text-muted, #888);
+  margin-top: 4rpx;
+}
+
+.stat-divider {
+  width: 1rpx;
+  height: 48rpx;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 酒类列表 */
+.drink-list {
+  padding: 20rpx 32rpx;
+}
+
+.drink-card {
+  display: flex;
+  align-items: center;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  background: var(--bg-card, rgba(255, 255, 255, 0.05));
+  border-radius: 24rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.drink-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, var(--accent, #EF9F27), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.drink-card.selected {
+  background: var(--bg-card-active, rgba(239, 159, 39, 0.08));
+  border-color: var(--border-active, rgba(239, 159, 39, 0.6));
+  box-shadow: 0 0 24rpx var(--glow, rgba(239, 159, 39, 0.15)),
+              inset 0 0 16rpx rgba(239, 159, 39, 0.05);
+}
+
+.drink-card.selected::before {
+  opacity: 1;
+}
+
+.drink-card:active {
+  transform: scale(0.98);
+}
+
+/* 酒图标 */
+.drink-icon {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1rpx solid rgba(255, 255, 255, 0.06);
+}
+
+.drink-emoji {
+  font-size: 52rpx;
+}
+
+/* 酒信息 */
+.drink-info {
+  flex: 1;
+  margin-left: 24rpx;
+  min-width: 0;
+}
+
+.drink-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.drink-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-main, #e0e0e0);
+}
+
+.drink-tag {
+  font-size: 20rpx;
+  color: var(--text-sub, #888);
+  padding: 4rpx 12rpx;
+  background: var(--accent-light, rgba(255, 255, 255, 0.08));
+  border-radius: 8rpx;
+}
+
+.drink-desc {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text-sub, #aaa);
+  margin-top: 6rpx;
+}
+
+.drink-meta {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 8rpx;
+}
+
+.meta-item {
+  font-size: 22rpx;
+  color: var(--text-muted, #666);
+}
+
+.meta-dot {
+  color: var(--text-muted, #444);
+}
+
+/* 选中标记 */
+.drink-check {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: var(--accent, #EF9F27);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.check-mark {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+/* 面基喝酒入口 */
+.face-drink-entry {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  margin: 20rpx 32rpx;
+  background: var(--bg-card, rgba(255, 255, 255, 0.05));
+  border-radius: 16rpx;
+  border: 1rpx solid var(--border-active, rgba(255, 255, 255, 0.08));
+}
+
+.face-icon {
+  font-size: 40rpx;
+}
+
+.face-info {
+  flex: 1;
+  margin-left: 16rpx;
+}
+
+.face-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-main, #e0e0e0);
+}
+
+.face-desc {
+  display: block;
+  font-size: 22rpx;
+  color: var(--text-muted, #888);
+  margin-top: 4rpx;
+}
+
+.face-arrow {
+  font-size: 36rpx;
+  color: var(--text-muted, #666);
+}
+
+/* 成就入口 */
+.achievement-entry {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  margin: 20rpx 32rpx;
+  background: var(--accent-light, rgba(239, 159, 39, 0.1));
+  border-radius: 16rpx;
+  border: 1rpx solid var(--border-active, rgba(239, 159, 39, 0.2));
+}
+
+.ach-icon {
+  font-size: 36rpx;
+}
+
+.ach-text {
+  flex: 1;
+  margin-left: 16rpx;
+  font-size: 26rpx;
+  color: var(--accent, #EF9F27);
+}
+
+.ach-arrow {
+  font-size: 36rpx;
+  color: var(--text-muted, #666);
+}
+
+/* 底部按钮 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx 40rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(15, 15, 30, 1), rgba(15, 15, 30, 0.9));
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.btn-start {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent, #EF9F27), var(--border-active, #D85A30));
+  border: none;
+  border-radius: 48rpx;
+}
+
+.btn-start::after {
+  border: none;
+}
+
+.btn-start[disabled] {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted, #666);
+}
+
+.btn-bartend {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--accent, #c88a2e);
+  background: var(--accent-light, rgba(200, 138, 46, 0.12));
+  border: 2rpx solid var(--border-active, #c88a2e);
+  border-radius: 48rpx;
+}
+
+.btn-bartend::after {
+  border: none;
+}

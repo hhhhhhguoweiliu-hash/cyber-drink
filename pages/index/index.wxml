@@ -1,0 +1,149 @@
+<!-- pages/index/index.wxml - 选酒页面（含风格选择） -->
+<view class="container fade-in" style="{{themeStyle}}">
+
+  <!-- ==================== 风格选择界面 ==================== -->
+  <view class="style-select" wx:if="{{!styleSelected}}">
+
+    <view class="style-header">
+      <text class="style-main-title">赛博喝酒</text>
+      <text class="style-sub">选择你的喝酒风格</text>
+    </view>
+
+    <view class="style-cards">
+      <!-- 豪迈风 -->
+      <view
+        class="style-card heroic-card"
+        bindtap="selectStyle"
+        data-style="heroic"
+      >
+        <view class="style-card-bg heroic-bg"></view>
+        <view class="style-card-content">
+          <text class="style-card-emoji">⚔️</text>
+          <text class="style-card-name">绿林好汉</text>
+          <text class="style-card-sub">豪迈风</text>
+          <text class="style-card-tagline">大碗喝酒 大口吃肉</text>
+          <text class="style-card-desc">江湖儿女，不醉不归</text>
+        </view>
+      </view>
+
+      <!-- 婉约风 -->
+      <view
+        class="style-card elegant-card"
+        bindtap="selectStyle"
+        data-style="elegant"
+      >
+        <view class="style-card-bg elegant-bg"></view>
+        <view class="style-card-content">
+          <text class="style-card-emoji">🌙</text>
+          <text class="style-card-name">才子佳人</text>
+          <text class="style-card-sub">婉约风</text>
+          <text class="style-card-tagline">花间一壶酒 独酌无相亲</text>
+          <text class="style-card-desc">月下独酌，微醺即止</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="style-footer">
+      <text class="style-tip">选择后可随时切换风格</text>
+    </view>
+  </view>
+
+  <!-- ==================== 选酒界面 ==================== -->
+  <block wx:if="{{styleSelected}}">
+
+    <!-- 顶部标题区 -->
+    <view class="header">
+      <view class="title-wrap">
+        <view class="title-row">
+          <text class="style-badge">{{styleMode.emoji}} {{styleMode.sub}}</text>
+          <view class="title-right">
+            <text class="audio-toggle {{musicOn ? 'on' : 'off'}}" bindtap="toggleMusic">{{musicOn ? '🎵' : '🔇'}}</text>
+            <text class="audio-toggle {{sfxOn ? 'on' : 'off'}}" bindtap="toggleSfx">{{sfxOn ? '🔊' : '🔕'}}</text>
+            <text class="change-style" bindtap="changeStyle">切换风格 ›</text>
+          </view>
+        </view>
+        <text class="title">今晚喝点什么？</text>
+        <text class="subtitle">{{styleEnterQuote}}</text>
+      </view>
+
+      <!-- 统计数据 -->
+      <view class="stats-bar" wx:if="{{stats.totalSips > 0}}">
+        <view class="stat-item">
+          <text class="stat-num">{{stats.totalDrinks}}</text>
+          <text class="stat-label">杯</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <text class="stat-num">{{stats.totalSips}}</text>
+          <text class="stat-label">口</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <text class="stat-num">{{stats.maxDrunkLevel}}</text>
+          <text class="stat-label">最高醉意</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 酒类列表 -->
+    <view class="drink-list">
+      <view
+        class="drink-card {{selectedDrink === index ? 'selected' : ''}}"
+        wx:for="{{drinks}}"
+        wx:key="id"
+        bindtap="selectDrink"
+        data-index="{{index}}"
+      >
+        <view class="drink-icon" style="background: {{item.color}};">
+          <text class="drink-emoji">{{item.emoji}}</text>
+        </view>
+        <view class="drink-info">
+          <view class="drink-name-row">
+            <text class="drink-name">{{item.name}}</text>
+            <text class="drink-tag" wx:if="{{item.id === 'cocktail'}}">可调酒</text>
+            <text class="drink-tag" wx:else>{{item.tag}}</text>
+          </view>
+          <text class="drink-desc">{{item.desc}}</text>
+          <view class="drink-meta">
+            <text class="meta-item">度数 {{item.abv}}%</text>
+            <text class="meta-dot">·</text>
+            <text class="meta-item">{{item.sipsPerGlass}}口/杯</text>
+          </view>
+        </view>
+        <view class="drink-check" wx:if="{{selectedDrink === index}}">
+          <text class="check-mark">✓</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 面基喝酒入口 -->
+    <view class="face-drink-entry" bindtap="goFaceDrink">
+      <text class="face-icon">🤝</text>
+      <view class="face-info">
+        <text class="face-title">面基喝酒</text>
+        <text class="face-desc">上传好友照片，面对面干杯</text>
+      </view>
+      <text class="face-arrow">›</text>
+    </view>
+
+    <!-- 成就入口 -->
+    <view class="achievement-entry" bindtap="goAchievements" wx:if="{{stats.unlockedAchievements.length > 0}}">
+      <text class="ach-icon">🏆</text>
+      <text class="ach-text">已解锁 {{stats.unlockedAchievements.length}} 个成就</text>
+      <text class="ach-arrow">›</text>
+    </view>
+
+    <!-- 底部按钮 -->
+    <view class="bottom-bar">
+      <!-- 鸡尾酒显示调酒入口 -->
+      <button class="btn-bartend" wx:if="{{selectedDrink >= 0 && drinks[selectedDrink].id === 'cocktail'}}" bindtap="goBartend">
+        🍸 去调酒台
+      </button>
+      <button class="btn-start" bindtap="startDrinking" disabled="{{selectedDrink === -1}}">
+        {{selectedDrink === -1 ? '选一种酒' : '开喝！'}}
+      </button>
+    </view>
+
+  </block>
+
+</view>
