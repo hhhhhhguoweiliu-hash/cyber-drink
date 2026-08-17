@@ -14,6 +14,7 @@ Page({
     isPouring: false,
     isDrinking: false,
     streamVisible: false,
+    cocktailCrafted: false,
     sips: 0,
     glasses: 0,
     drunkValue: 0,
@@ -46,10 +47,11 @@ Page({
     const index = Math.max(0, DRINKS.findIndex(d => d.id === drinkId))
     const drink = DRINKS[index]
     const profile = getV7Profile(drink.id)
+    const cocktailCrafted = options.crafted === '1'
     this.sessionDrinkIds = [drink.id]
     this.drinkBreakdown[drink.id] = { sips: 0, glasses: 0 }
 
-    this.setData({ drink, profile, activeIndex: index })
+    this.setData({ drink, profile, activeIndex: index, cocktailCrafted })
     this.applyTheme()
     this.initCanvas()
   },
@@ -261,13 +263,13 @@ Page({
     this.glassConfig = this.getGlassConfig(drink.glassType)
     app.globalData.currentDrink = drink
     audio.playSfx('click')
-    setTimeout(() => profile.requiresBartending ? this.showQuote('这杯建议现调，去调酒台？') : this.startPour(), 220)
+    setTimeout(() => (profile.requiresBartending && !this.data.cocktailCrafted) ? this.showQuote('这杯建议现调，去调酒台？') : this.startPour(), 220)
   },
 
   startPour() {
     if (this.data.isPouring || this.data.isDrinking) return
     const profile = this.data.profile
-    if (profile.requiresBartending) {
+    if (profile.requiresBartending && !this.data.cocktailCrafted) {
       wx.showModal({
         title: '现调更有味道',
         content: '鸡尾酒不从瓶里直接倒。去赛博调酒台按真实步骤现做一杯？',
