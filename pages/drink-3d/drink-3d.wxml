@@ -1,35 +1,50 @@
 <view class="page" style="{{themeStyle}}">
-  <view class="hud">
-    <view class="hud-left">
-      <text class="eyebrow">REAL-TIME WEBGL</text>
-      <text class="title">{{drink.emoji}} {{drink.name}}</text>
-      <text class="sub">{{profile.serving}} · {{drink.abv}}%vol</text>
-    </view>
-    <view class="meter-wrap">
-      <text class="meter-value" style="color:{{drunkLevelColor}};">{{drunkValue}}%</text>
-      <text class="meter-label">{{drunkStatus}}</text>
-    </view>
-  </view>
-  <view class="quote {{quoteVisible ? 'show' : ''}}">{{currentQuote}}</view>
   <view class="scene-shell">
     <canvas type="webgl" id="drink3d" class="webgl" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove"></canvas>
     <view wx:if="{{!ready}}" class="loading">正在点亮 3D 酒吧…</view>
-  </view>
-  <view class="actions">
-    <view class="mini-stat"><text class="num">{{glasses}}</text><text>杯</text></view>
-    <button class="primary" bindtap="startPour" disabled="{{!ready || busy}}">{{busy ? '动作中…' : (profile.requiresBartending && !cocktailCrafted ? '去调这杯' : '倒一杯')}}</button>
-    <button class="secondary" bindtap="takeSip" disabled="{{!ready || busy || drunkValue >= 100}}">喝一口</button>
-    <view class="mini-stat right"><text class="num">{{sips}}</text><text>口</text></view>
-  </view>
-  <view class="drawer">
-    <view class="drawer-head"><text>3D 酒柜</text><text class="hint">拖动酒桌可转视角</text></view>
-    <scroll-view scroll-x class="scroll" show-scrollbar="false">
-      <view class="list">
-        <view wx:for="{{drinks}}" wx:key="id" data-index="{{index}}" bindtap="switchDrink" class="card {{activeIndex === index ? 'active' : ''}}">
-          <text class="emoji">{{item.emoji}}</text><text class="name">{{item.name}}</text><text class="abv">{{item.abv}}%</text>
-        </view>
+
+    <view class="hud-overlay">
+      <view class="hud-left">
+        <text class="eyebrow">CYBER BAR · REAL-TIME 3D</text>
+        <text class="title">{{drink.emoji}} {{drink.name}}</text>
+        <text class="sub">{{profile.serving}} · {{drink.abv}}%vol</text>
       </view>
-    </scroll-view>
+      <view class="meter-wrap">
+        <text class="meter-value" style="color:{{drunkLevelColor}};">{{drunkValue}}%</text>
+        <text class="meter-label">{{drunkStatus}}</text>
+      </view>
+    </view>
+
+    <view class="quote {{quoteVisible ? 'show' : ''}}">{{currentQuote}}</view>
+    <view class="drag-tip">左右拖动 · 转动视角</view>
   </view>
-  <view class="footer"><view class="finish" bindtap="finishDrinking">结束酒局</view></view>
+
+  <view class="control-dock">
+    <view class="action-row">
+      <view class="mini-stat"><text class="num">{{glasses}}</text><text>杯</text></view>
+      <button class="primary" bindtap="startPour" disabled="{{!ready || busy}}">{{busy ? '动作中…' : (profile.requiresBartending && !cocktailCrafted ? '去调这杯' : '倒一杯')}}</button>
+      <button class="secondary" bindtap="takeSip" disabled="{{!ready || busy || drunkValue >= 100}}">喝一口</button>
+      <view class="mini-stat right"><text class="num">{{sips}}</text><text>口</text></view>
+    </view>
+
+    <view class="dock-tools">
+      <view class="cabinet-toggle" bindtap="toggleCabinet">
+        <text>{{cabinetOpen ? '收起酒柜' : '换一瓶酒'}}</text>
+        <text class="chev">{{cabinetOpen ? '⌄' : '⌃'}}</text>
+      </view>
+      <view class="finish" bindtap="finishDrinking">结束酒局</view>
+    </view>
+
+    <view wx:if="{{cabinetOpen}}" class="drawer">
+      <scroll-view scroll-x class="scroll" show-scrollbar="false">
+        <view class="list">
+          <view wx:for="{{drinks}}" wx:key="id" data-index="{{index}}" bindtap="switchDrink" class="card {{activeIndex === index ? 'active' : ''}}">
+            <text class="emoji">{{item.emoji}}</text>
+            <text class="name">{{item.name}}</text>
+            <text class="abv">{{item.abv}}%</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
 </view>
