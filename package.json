@@ -1,0 +1,9 @@
+{
+  "name": "cyber-drink",
+  "version": "1.1.0",
+  "private": true,
+  "description": "赛博喝酒微信小程序 V7 3D",
+  "dependencies": {
+    "threejs-miniprogram": "0.0.8"
+  }
+}
