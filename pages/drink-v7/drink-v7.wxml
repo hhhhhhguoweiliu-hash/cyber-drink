@@ -45,9 +45,9 @@
       <text class="counter-sub">{{sips}} 口</text>
     </view>
 
-    <button wx:if="{{phase === 'empty' && !profile.requiresBartending}}" class="primary pour-btn" bindtap="startPour">倒一杯</button>
+    <button wx:if="{{phase === 'empty' && (!profile.requiresBartending || cocktailCrafted)}}" class="primary pour-btn" bindtap="startPour">倒一杯</button>
     <button wx:elif="{{phase === 'pouring'}}" class="primary disabled" disabled>正在倒酒…</button>
-    <button wx:elif="{{profile.requiresBartending}}" class="primary bartend-btn" bindtap="goBartend">去调这杯</button>
+    <button wx:elif="{{profile.requiresBartending && !cocktailCrafted}}" class="primary bartend-btn" bindtap="goBartend">去调这杯</button>
     <button wx:else class="primary drink-btn {{isDrinking ? 'active' : ''}}" bindtap="takeSip" disabled="{{drunkValue >= 100}}">{{isDrinking ? '咕咚…' : '喝一口'}}</button>
 
     <view class="counter right"><text class="counter-num">{{drink.abv}}</text><text class="counter-unit">%vol</text></view>
