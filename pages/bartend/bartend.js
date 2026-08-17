@@ -23,20 +23,14 @@ Page({
     cocktailDesc: '你自己调的酒，味道怎样只有喝了才知道'
   },
 
-  // 选基酒
   selectBase(e) {
     const index = e.currentTarget.dataset.index
     const liquor = BASE_LIQUORS[index]
-    this.setData({
-      selectedBase: index,
-      liquidLevel: 30,
-      liquidColor: liquor.color
-    })
+    this.setData({ selectedBase: index, liquidLevel: 30, liquidColor: liquor.color })
     wx.vibrateShort({ type: 'light' })
     audio.playSfx('pour')
   },
 
-  // 加冰
   addIce() {
     if (!this.data.hasIce) {
       this.setData({ hasIce: true })
@@ -45,33 +39,20 @@ Page({
     }
   },
 
-  // 选辅料
   selectMixer(e) {
     const index = e.currentTarget.dataset.index
     const mixer = MIXERS[index]
-    // 混合颜色
-    const baseColor = this.data.liquidColor
-    const mixedColor = this.mixColors(baseColor, mixer.color)
-    this.setData({
-      selectedMixer: index,
-      liquidLevel: 60,
-      liquidColor: mixedColor
-    })
+    const mixedColor = this.mixColors(this.data.liquidColor, mixer.color)
+    this.setData({ selectedMixer: index, liquidLevel: 60, liquidColor: mixedColor })
     wx.vibrateShort({ type: 'light' })
     audio.playSfx('pour')
   },
 
-  // 简单颜色混合（近似）
   mixColors(c1, c2) {
-    // 如果 c2 是具体颜色，直接偏移向它
-    if (c2.startsWith('#')) {
-      // 提取 mixer 颜色做近似
-      return c2.replace(')', ', 0.6)').replace('rgb', 'rgba')
-    }
+    if (c2.startsWith('#')) return c2.replace(')', ', 0.6)').replace('rgb', 'rgba')
     return c2
   },
 
-  // 点击兜底（模拟器里用）
   onShakeTap() {
     if (this.data.shakeCount >= 5) return
     const newCount = Math.min(this.data.shakeCount + 1, 5)
@@ -83,15 +64,12 @@ Page({
     if (newCount >= 5) this.stopShakeDetection()
   },
 
-  // 启动加速度计检测真实摇晃
   startShakeDetection() {
     this._lastMag = 0
     this._shakeDebounce = false
     wx.startAccelerometer({ interval: 'game' })
     this._accListener = (res) => {
-      // 计算加速度总幅度
       const mag = Math.sqrt(res.x * res.x + res.y * res.y + res.z * res.z)
-      // 超过阈值 + 防抖
       if (mag > 1.8 && !this._shakeDebounce && this.data.shakeCount < 5) {
         this._shakeDebounce = true
         const newCount = Math.min(this.data.shakeCount + 1, 5)
@@ -101,7 +79,6 @@ Page({
         if (this._shakeTimer) clearTimeout(this._shakeTimer)
         this._shakeTimer = setTimeout(() => { this.setData({ shaking: false }) }, 500)
         if (newCount >= 5) this.stopShakeDetection()
-        // 300ms 防抖，避免一次摇晃算多次
         setTimeout(() => { this._shakeDebounce = false }, 300)
       }
       this._lastMag = mag
@@ -109,7 +86,6 @@ Page({
     wx.onAccelerometerChange(this._accListener)
   },
 
-  // 停止加速度计
   stopShakeDetection() {
     if (this._accListener) {
       wx.stopAccelerometer()
@@ -118,23 +94,15 @@ Page({
     }
   },
 
-  // 出酒
   pourOut() {
     if (!this.data.poured) {
-      this.setData({
-        poured: true,
-        pouring: true,
-        liquidLevel: 80
-      })
+      this.setData({ poured: true, pouring: true, liquidLevel: 80 })
       wx.vibrateShort({ type: 'medium' })
       audio.playSfx('pour')
-      setTimeout(() => {
-        this.setData({ pouring: false })
-      }, 1000)
+      setTimeout(() => this.setData({ pouring: false }), 1000)
     }
   },
 
-  // 加装饰
   addGarnish() {
     if (!this.data.garnished) {
       this.setData({ garnished: true })
@@ -143,32 +111,22 @@ Page({
     }
   },
 
-  // 确认当前步骤
   confirmStep() {
     const next = this.data.currentStep + 1
     if (next < this.data.steps.length) {
       this.setData({ currentStep: next })
       audio.playSfx('click')
-      // 进入摇匀步骤，启动加速度计
-      if (next === 3) {
-        this.startShakeDetection()
-      }
-      // 离开摇匀步骤，停止加速度计
-      if (this.data.currentStep === 3 && next !== 3) {
-        this.stopShakeDetection()
-      }
+      if (next === 3) this.startShakeDetection()
+      if (this.data.currentStep === 3 && next !== 3) this.stopShakeDetection()
     }
   },
 
-  // 页面隐藏/卸载时清理
   onHide() {
     this.stopShakeDetection()
     audio.pauseMusic()
   },
 
-  onShow() {
-    audio.resumeMusic()
-  },
+  onShow() { audio.resumeMusic() },
 
   onUnload() {
     this.stopShakeDetection()
@@ -176,19 +134,11 @@ Page({
     audio.pauseMusic()
   },
 
-  // 完成调酒
   finishBartending() {
-    // 根据基酒+辅料生成鸡尾酒名
     const base = BASE_LIQUORS[this.data.selectedBase]
     const mixer = MIXERS[this.data.selectedMixer]
-    const names = [
-      `${base.name}${mixer.name}特调`,
-      '午夜迷情',
-      '月光曲',
-      '微醺夏夜'
-    ]
+    const names = [`${base.name}${mixer.name}特调`, '午夜迷情', '月光曲', '微醺夏夜']
     const name = names[Math.floor(Math.random() * names.length)]
-
     this.setData({
       finished: true,
       cocktailName: name,
@@ -198,14 +148,10 @@ Page({
     audio.playSfx('achievement')
   },
 
-  // 去喝酒
+  // V7：调完酒回到新酒桌继续喝
   goDrink() {
     const drink = app.globalData.currentDrink
-    if (drink) {
-      wx.redirectTo({
-        url: `/pages/drink/drink?id=${drink.id}`
-      })
-    }
+    if (drink) wx.redirectTo({ url: `/pages/drink-v7/drink-v7?id=${drink.id}` })
   },
 
   onShareAppMessage() {
