@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/drink/drink",
     "pages/drink-v7/drink-v7",
+    "pages/drink-3d/drink-3d",
     "pages/bartend/bartend",
+    "pages/bartend-3d/bartend-3d",
     "pages/face-drink/face-drink",
     "pages/result/result"
   ],
