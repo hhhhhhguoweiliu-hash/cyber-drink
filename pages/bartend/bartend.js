@@ -198,12 +198,12 @@ Page({
     audio.playSfx('achievement')
   },
 
-  // 去喝酒（V7 沉浸式酒桌）
+  // 去喝酒（V7 沉浸式酒桌；标记这杯已经调好）
   goDrink() {
     const drink = app.globalData.currentDrink
     if (drink) {
       wx.redirectTo({
-        url: `/pages/drink-v7/drink-v7?id=${drink.id}`
+        url: `/pages/drink-v7/drink-v7?id=${drink.id}&crafted=1`
       })
     }
   },
